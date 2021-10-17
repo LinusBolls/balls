@@ -1,0 +1,14 @@
+{
+  "editor.tabSize": 2,
+  "python.autoComplete.extraPaths": [".env/bin/python3"],
+  "python.analysis.extraPaths": [".env/bin/python3"],
+  "terminal.integrated.env.osx": {
+    "PYTHONPATH": "../../foosball"
+  },
+  "python.pythonPath": ".env/bin/python3",
+  "python.envFile": ".env",
+  "files.exclude": {
+    "**/__init__.py": true,
+    "**/__pycache__": true
+  }
+}
