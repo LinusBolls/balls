@@ -50,22 +50,27 @@ class Match():
 
         find_users_query = { "email": { "$in": self.team_members }}
 
-        # db_members = self.db.users.find(find_users_query)
+        db_members = self.db.users.find(find_users_query)
 
-        # members_all_exist = db_members.count() == len(self.team_members)
+        members_all_exist = db_members.count() == len(self.team_members)
 
-        # if not members_all_exist:
-        #     return ( None, UserNotFoundError )
+        if not members_all_exist:
+            return ( None, UserNotFoundError )
+
+        matchId = "moin"
+
+        for team in self.teams:
+            for member in team["members"]:
+                ding = self.db.users.find_one_and_update({ "email": member["email"] }, { "$push": { "matches": matchId }, "$inc": { f"elo.{self.game}": member["result"] } })
+                previous_elo = attr(ding["elo"], self.game, 0)
+                member["elo"] = previous_elo
 
         success, err = self.__save_or_create(True)
 
         if err:
             return ( success, err )
 
-        matchId = "moin"
-
-        result = self.db.users.update_many(find_users_query, { "$push": { "matches": matchId } })
-        return ( result.modified_count == len(self.team_members), None )
+        return ( True, None )
       
     def save(self):
         return self.__save_or_create(False)

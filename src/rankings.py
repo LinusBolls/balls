@@ -3,9 +3,11 @@ import pymongo
 def attr(obj, key, fallback = None):
     return obj[key] if key in obj else fallback
 
-def get_best_users_in_game(db, game, max):
+def get_best_users_in_game(db, game, max_results = None):
 
-    users = db.users.aggregate([
+    # TODO: add BE_RANKED perm
+
+    query = [
         {
             "$match": {
                 f"elo.{game}": { "$exists": True }
@@ -15,11 +17,12 @@ def get_best_users_in_game(db, game, max):
             "$sort": {
                 f"elo.{game}": pymongo.DESCENDING,
             }
-        },
-        {
-          "$limit": max
         }
-    ])
+    ]
+    if max_results is not None:
+        query.append({ "$limit": max_results })
+
+    users = db.users.aggregate(query)
 
     user_map = lambda user: {
         "email": user["email"], 

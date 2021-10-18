@@ -15,45 +15,54 @@ jwt.secret = config["jwt"]["privateKey"]
 User.jwt = jwt
 User.config = config
 
-def now():
-    return datetime.now()
-
 from src.perms import encode_perms, Perms, UNCONDITIONAL_PERM_LIST, MAIL_CONFIRMED_PERM_LIST
 
-linus = User(db, {
-    "created": now(),
+linus, linus_err = User(db, {
+    "created": datetime.now(),
     "email": "linus.bolls@code.berlin",
     "name": "Linus Bolls",
-    "elo": {
-        "chess": 5
-    },
+    "elo": {},
     "perms_int": encode_perms(list(Perms)),
-})
-tom = User(db, {
-    "created": now(),
+}).create()
+
+tom, tom_err = User(db, {
+    "created": datetime.now(),
     "email": "tom-perry.lustig@code.berlin",
     "name": "Semi aquatic, egg-laying mammal of action",
-    "elo": {
-        "chess": 7
-    },
+    "elo": {},
     "perms_int": encode_perms(UNCONDITIONAL_PERM_LIST),
-})
-_, linus_err = linus.create()
-_, tom_err = tom.create()
+}).create()
 
-tom_obj, err = User.from_email(db, "tom-perry.lustig@code.berlin")
+# try:
+#     user, create_err = User.from_email(db, "tom-perry.lustig@code.berlin")
 
-tom_obj.add_perms(MAIL_CONFIRMED_PERM_LIST).save()
+#     _, save_err = user.add_perms(MAIL_CONFIRMED_PERM_LIST).save()
 
-test_match = Match(db, { 
-    "created": now(), 
+#     if create_err:
+#         raise create_err
+#     if save_err:
+#         raise save_err
+
+# except Exception as create_err:
+#     print(create_err)
+
+test_match, _ = Match(db, { 
+    "created": datetime.now(),
     "game": "chess", 
     "teams": [ 
-        { "created": "now", "members": [
-            { "email": "linus.bolls@code.berlin", "elo": 5, "result": 5 },
-            { "email": "tom-perry.lustig@code.berlin", "elo": 5, "result": 5 }
+        { "created": datetime.now(), "members": [
+            { "email": "linus.bolls@code.berlin", "result": 2 },
+            { "email": "tom-perry.lustig@code.berlin", "result": 5 }
           ] }
     ] 
-})
-test_match.create()
-print(get_best_users_in_game(db, "chess", 99))
+}).create()
+
+chess_grandmasters = get_best_users_in_game(db, "chess")
+print(chess_grandmasters)
+
+"""
+TODO: implement matchId
+TODO: change elo if match is changed
+TODO: add BE_RANKED perm
+TODO: add game evaluation
+"""
