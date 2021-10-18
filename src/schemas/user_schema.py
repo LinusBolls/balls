@@ -3,7 +3,7 @@ from .atomics_schema import created_schema, email_schema
 user_schema = {
     "bsonType": "object",
     "additionalProperties": True,
-    "required": [ "email", "created", "perms_int" ],
+    "required": [ "email", "created", "perms_int", "elo" ],
     "properties": {
         "created": created_schema,
         "perms_int": {
@@ -26,6 +26,10 @@ user_schema = {
                 "description": "Match id"
             },
             "description": "The matches the user has played"
+        },
+        "elo": {
+            "bsonType": [ "object" ],
+            "description": "A dict of <game, elo>"
         }
     }
 }

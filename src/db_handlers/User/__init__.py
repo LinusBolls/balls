@@ -16,11 +16,8 @@ from src.perms import decode_perms
 global config
 global jwt
 
-def attr_or_none(obj, attr):
-    try:
-        return obj[attr]
-    except (AttributeError, KeyError):
-        return None
+def attr(obj, key, fallback = None):
+    return obj[key] if key in obj else fallback
 
 def remove_none(dict):
     return { k: v for k, v in dict.items() if v is not None }
@@ -53,12 +50,13 @@ class User():
     def __init__(self, db, user_data):
 
         self.db = db
-        self.created = attr_or_none(user_data, "created")
-        self.email = attr_or_none(user_data, "email")
-        self.name = attr_or_none(user_data, "name")
-        self.img = attr_or_none(user_data, "img")
-        self.matches = attr_or_none(user_data, "matches")
-        self.perms_int = attr_or_none(user_data, "perms_int")
+        self.created = attr(user_data, "created")
+        self.email = attr(user_data, "email")
+        self.name = attr(user_data, "name")
+        self.img = attr(user_data, "img")
+        self.matches = attr(user_data, "matches")
+        self.elo = attr(user_data, "elo")
+        self.perms_int = attr(user_data, "perms_int")
         self.perms_list = decode_perms(self.perms_int)
 
     def from_query(db, db_query):
@@ -95,8 +93,10 @@ class User():
             "name": self.name,
             "img": self.img,
             "matches": self.matches,
+            "elo": self.elo,
             "perms_int": self.perms_int,
         })
+
         try:
             if is_create:
                 result = self.db.users.insert_one(user)

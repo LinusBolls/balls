@@ -4,11 +4,8 @@ from src.perms import decode_perms
 global config
 global jwt
 
-def attr_or_none(obj, attr):
-    try:
-        return obj[attr]
-    except (AttributeError, KeyError):
-        return None
+def attr(obj, key, fallback = None):
+    return obj[key] if key in obj else fallback
 
 def remove_none(dict):
     return { k: v for k, v in dict.items() if v is not None }
@@ -18,9 +15,9 @@ class Match():
     def __init__(self, db, match_data):
 
         self.db = db
-        self.created = attr_or_none(match_data, "created")
-        self.game = attr_or_none(match_data, "game")
-        self.teams = attr_or_none(match_data, "teams")
+        self.created = attr(match_data, "created")
+        self.game = attr(match_data, "game")
+        self.teams = attr(match_data, "teams")
 
         team_members = []
 

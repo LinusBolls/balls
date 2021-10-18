@@ -28,11 +28,6 @@ MAIL_CONFIRMED_PERM_LIST = [
     Perms.VIEW_GAMES,
     Perms.VIEW_MATCHES,
 ]
-# try:
-#     some_object_iterator = iter(some_object)
-# except TypeError as te:
-#     print(some_object, 'is not iterable')
-
 def encode_perms(perms_list, perms_enum = Perms):
     perms_int = 0
 

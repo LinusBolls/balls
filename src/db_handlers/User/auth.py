@@ -34,7 +34,7 @@ def make_magic_link(self):
         if not config["isTestMode"]:
             mail.send_mail([ self.email ], "Your Magic Login Link", link)
 
-        result = self.db.users.users.update_one({ "email": self.email }, setTokenQuery)
+        result = self.db.users.update_one({ "email": self.email }, setTokenQuery)
 
         if (result.modified_count == 0):
             raise UserNotFoundError

@@ -3,8 +3,8 @@ game_schema = {
     "description": "TODO: Make enum"
 }
 created_schema = {
-    "bsonType": "string",
-    "description": "TODO: Make auto date"
+    "bsonType": "date",
+    "description": "Creation time"
 }
 email_schema = {
     "bsonType": "string",
