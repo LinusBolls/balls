@@ -59,10 +59,11 @@ test_match, _ = Match(db, {
 
 chess_grandmasters = get_best_users_in_game(db, "chess")
 print(chess_grandmasters)
+print(db.matches.find_one())
 
 """
-TODO: implement matchId
-TODO: change elo if match is changed
+TODO: improve match.id
+TODO: change match_player.result if match is changed
 TODO: add BE_RANKED perm
-TODO: add game evaluation
+TODO: add game elo_functions
 """

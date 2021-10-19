@@ -1,5 +1,5 @@
 from src.errors import handle_err, UserNotFoundError
-from src.perms import decode_perms
+import hashlib
 
 global config
 global jwt
@@ -33,11 +33,13 @@ class Match():
             "created": self.created,
             "game": self.game,
             "teams": self.teams,
+            "id": self.id,
         })
 
         try:
             if is_create:
                 result = self.db.matches.insert_one(match)
+                self.id = result.inserted_id
                 return ( result.inserted_id is not None, None )
             else:
                 result = self.db.matches.replace_one({ "email": self.email }, match)
@@ -57,16 +59,15 @@ class Match():
         if not members_all_exist:
             return ( None, UserNotFoundError )
 
-        matchId = "moin"
+        self.id = hashlib.md5(str(self.db.matches.count()).encode("utf-8")).hexdigest()
 
         for team in self.teams:
             for member in team["members"]:
-                ding = self.db.users.find_one_and_update({ "email": member["email"] }, { "$push": { "matches": matchId }, "$inc": { f"elo.{self.game}": member["result"] } })
+                ding = self.db.users.find_one_and_update({ "email": member["email"] }, { "$push": { "matches": self.id }, "$inc": { f"elo.{self.game}": member["result"] } })
                 previous_elo = attr(ding["elo"], self.game, 0)
                 member["elo"] = previous_elo
 
         success, err = self.__save_or_create(True)
-
         if err:
             return ( success, err )
 

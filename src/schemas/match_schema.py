@@ -5,6 +5,10 @@ match_schema = {
     "bsonType": "object",
     "required": [ "created", "game", "teams" ],
     "properties": {
+        "id": {
+            "bsonType": "string",
+            "description": "md5 hash of the amount of existing matches"
+        },
         "created": created_schema,
         "game": game_schema,
         "teams": {
