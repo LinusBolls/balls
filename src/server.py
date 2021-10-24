@@ -14,8 +14,8 @@ globals.api = api
 
 import endpoints.user.post # cookie[CREATE_USERS]? user_data
 import endpoints.user.get # <user_id>
-# import endpoints.user.put # cookie[MANAGE_USERS or email=email], user_data
-# import endpoints.user.delete # cookie[MANAGE_USERS or email=email], user_id
+import endpoints.user.put # cookie[MANAGE_USERS or email=email], user_data
+import endpoints.user.delete # cookie[MANAGE_USERS or email=email], user_id
 
 import endpoints.match.post # cookie[CREATE_MATCHES], match_data
 import endpoints.match.get # <match_id>
@@ -33,10 +33,13 @@ if __name__ == "__main__":
 
 # flask_restful gold: https://blog.miguelgrinberg.com/post/designing-a-restful-api-using-flask-restful
 # sql_alchemy gold: https://www.robinwieruch.de/postgres-sql-macos-setup
-# jwt: https://auth0.com/blog/how-to-handle-jwt-in-python/
+# pyjwt docs: https://pyjwt.readthedocs.io/en/latest/usage.html
 
+# TODO: implement NO_ACCOUNT_PERMS_LIST
 # TODO: implement BE_RANKED perm
 # TODO: implement game rules
-# TODO: implement teams for events to fix the setting created in teams hack
+# TODO: implement teams for events to fix the set created in teams hack
 # TODO: make .get_data(include) possible
 # TODO: make cookie expiry date possible
+
+# TODO: make jwt decryptable for client

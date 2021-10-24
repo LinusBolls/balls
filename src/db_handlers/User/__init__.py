@@ -4,6 +4,10 @@ from src.errors import handle_err, UserNotFoundError
 from src.perms import decode_perms
 import src.jwt_token as jwt
 
+def set_if_exists(key, src, target):
+    if key in src:
+        target[key] = src[key]
+
 def attr(obj, key, fallback = None):
     return obj[key] if key in obj else fallback
 
@@ -34,6 +38,16 @@ class User():
     """
 
     # ===== Basics ===== #
+
+    def update_info(self, user_data):
+        # set_if_exists("name", self, user_data)
+        # set_if_exists("img", self, user_data)
+
+        if "name" in user_data:
+            self.name = user_data["name"]
+        if "img" in user_data:
+            self.img = user_data["img"]
+        return self
 
     def __init__(self, db, user_data):
 
@@ -100,6 +114,9 @@ class User():
       
     def save(self):
         return self.__save_or_create(False)
+    
+    def delete(self):
+        return ( self.db.users.delete_one({ "email": self.email }).deleted_count == 1, None)
     
     def get_data(self, exclude=[], include=[]):
 
