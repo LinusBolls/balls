@@ -1,3 +1,7 @@
+class MatchNotFoundError(Exception):
+    status = 404
+    msg = "Match could not be found"
+
 class UserNotFoundError(Exception):
     status = 404
     msg = "User could not be found"
@@ -5,6 +9,14 @@ class UserNotFoundError(Exception):
 class InvalidMagicLinkError(Exception):
     status = 401
     msg = "Magic data could not be validated"
+
+class JwtDecryptError(Exception):
+    status = 403
+    msg = "Failed to decrypt jwt token"
+
+class MissingPermissionError(Exception):
+    status = 401
+    msg = "Missing authorization for that action"
 
 def handle_err(err):
     e = type(err).__name__

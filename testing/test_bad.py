@@ -2,7 +2,6 @@ from datetime import datetime
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from src.init import config, db
 from src.db_handlers.User import User
 from src.db_handlers.Match import Match
 import src.send_mail as mail

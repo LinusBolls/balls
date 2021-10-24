@@ -1,8 +1,9 @@
 import requests
 
-from errors import handle_err
+from src.errors import handle_err
+from src.globals import config
 
-global mailgunConfig
+mailgunConfig = config["mailgun"]
 
 def send_mail(recipientList, subject, content):
     try:
@@ -16,7 +17,7 @@ def send_mail(recipientList, subject, content):
                 "text": content
             }
         )
-        return [ data, None ]
+        return ( data, None )
 
     except Exception as e:
-        return [ None, handle_err(e) ]
+        return ( None, handle_err(e) )

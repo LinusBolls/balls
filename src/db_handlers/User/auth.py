@@ -1,24 +1,16 @@
 from secrets import token_urlsafe
-import datetime
 
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-from src.init import config
-from src.perms import encode_perms
+from src.globals import config
 from src.errors import handle_err, UserNotFoundError
-
+from src.perms import encode_perms
 import src.send_mail as mail
 import src.jwt_token as jwt
-
-mail.mailgunConfig = config["mailgun"]
-jwt.secret = config["jwt"]["privateKey"]
 
 def make_token(self):
     """
       Returns str
     """
-    return jwt.encode_token({ "email": self.email, "perms": self.perms_int })
+    return jwt.make_token({ "email": self.email, "perms": self.perms_int })
 
 def make_magic_link(self):
     """

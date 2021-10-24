@@ -1,8 +1,7 @@
-from src.errors import handle_err, UserNotFoundError
+from datetime import datetime
 import hashlib
 
-global config
-global jwt
+from src.errors import handle_err, MatchNotFoundError, UserNotFoundError
 
 def attr(obj, key, fallback = None):
     return obj[key] if key in obj else fallback
@@ -26,6 +25,19 @@ class Match():
                 team_members.append(y["email"])
 
         self.team_members = team_members
+    
+    def from_query(db, db_query):
+  
+        try:
+            match_data = db.matches.find_one(db_query)
+
+            if match_data is None:
+                raise MatchNotFoundError
+
+            return ( Match(db, match_data), None )
+
+        except Exception as e:
+            return ( None, handle_err(e) )
     
     def __save_or_create(self, is_create):
   
@@ -51,10 +63,9 @@ class Match():
     def create(self):
 
         find_users_query = { "email": { "$in": self.team_members }}
+        print(self.team_members)
 
-        db_members = self.db.users.find(find_users_query)
-
-        members_all_exist = db_members.count() == len(self.team_members)
+        members_all_exist = self.db.users.find(find_users_query).count() == len(self.team_members)
 
         if not members_all_exist:
             return ( None, UserNotFoundError )
@@ -75,3 +86,23 @@ class Match():
       
     def save(self):
         return self.__save_or_create(False)
+
+    def get_data(self, exclude=[], include=[]):
+
+        if len(include) > 0:
+            data = {}
+            for key in include:
+                is_date = isinstance(self[key], datetime)
+                data[key] = str(self[key]) if is_date else self[key]
+
+        else:
+            data = {
+                "created": str(self.created),
+                "game": self.game,
+                "teams": self.teams,
+            }
+
+        for field in exclude:
+            del data[field]
+
+        return data

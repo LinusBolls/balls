@@ -3,12 +3,12 @@
   "python.autoComplete.extraPaths": [".env/bin/python3"],
   "python.analysis.extraPaths": [".env/bin/python3"],
   "terminal.integrated.env.osx": {
-    "PYTHONPATH": "../../foosball"
+    "PYTHONPATH": "../"
   },
   "python.pythonPath": ".env/bin/python3",
   "python.envFile": ".env",
   "files.exclude": {
-    "**/__init__.py": true,
+    "**/__init__.py": false,
     "**/__pycache__": true
   }
 }
