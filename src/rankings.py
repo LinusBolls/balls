@@ -5,7 +5,7 @@ def attr(obj, key, fallback = None):
 
 def get_best_users_in_game(db, game, max_results = None):
 
-    # TODO: add BE_RANKED perm
+    # TODO: implement BE_RANKED perm
 
     query = [
         {
