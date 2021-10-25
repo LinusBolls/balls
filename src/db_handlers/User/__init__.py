@@ -49,7 +49,7 @@ class User():
             self.img = user_data["img"]
         return self
 
-    def __init__(self, db, user_data):
+    def __init__(self, db, user_data=None):
 
         self.db = db
         self.created = attr(user_data, "created")
@@ -74,11 +74,11 @@ class User():
         except Exception as e:
             return ( None, handle_err(e) )
 
-    def from_email(db, email):
+    def from_email(db, email=None):
 
         return User.from_query(db, { "email": email })
 
-    def from_token(db, token):
+    def from_token(db, token=None):
   
         token_data, err = jwt.validate_token(token)
 

@@ -35,11 +35,11 @@ if __name__ == "__main__":
 # sql_alchemy gold: https://www.robinwieruch.de/postgres-sql-macos-setup
 # pyjwt docs: https://pyjwt.readthedocs.io/en/latest/usage.html
 
-# TODO: implement NO_ACCOUNT_PERMS_LIST
-# TODO: implement BE_RANKED perm
-# TODO: implement game rules
-# TODO: implement teams for events to fix the set created in teams hack
-# TODO: make .get_data(include) possible
-# TODO: make cookie expiry date possible
+# TODO: implement Perms.BE_RANKED
+# TODO: implement game rules, teams, events
+# TODO: implement PUT, DELETE match
 
-# TODO: make jwt decryptable for client
+# TODO: fix .get_data(include)
+# TODO: make cookie expiry date possible, make jwt expiry date possible
+
+# TODO: make jwt readable for client!!!

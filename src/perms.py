@@ -1,5 +1,7 @@
 import enum
 
+from src.errors import MissingPermissionError
+
 class Perms(enum.Enum):
     """Enum of permissions accesible by both dot and bracket notation.
 
@@ -19,15 +21,50 @@ class Perms(enum.Enum):
     VIEW_MATCHES = 512
     VIEW_RANKINGS = 1024
 
-UNCONDITIONAL_PERM_LIST = [
-    Perms.CREATE_MATCHES,
-    Perms.VIEW_RANKINGS,
-]
-MAIL_CONFIRMED_PERM_LIST = [
+NO_ACCOUNT_REQUIRED_PERMS_LIST = [
     Perms.VIEW_USERS,
     Perms.VIEW_GAMES,
     Perms.VIEW_MATCHES,
+    Perms.VIEW_RANKINGS,
 ]
+ACCOUNT_REQUIRED_PERMS_LIST = [
+    Perms.CREATE_MATCHES,
+]
+MAIL_CONFIRM_REQUIRED_PERMS_LIST = [ 
+    Perms.CREATE_GAMES,
+]
+def has_permissions(user, permissions_list):
+
+    """
+    checks if all permissions in permissions_list are included in either
+    user.perms_list or NO_ACCOUNT_REQUIRED_PERMS_LIST.
+
+    example:
+
+    if not has_permissions(User.from_token(db, request.cookies.get("token"))[0], [ Perms.VIEW_USERS ]):
+        raise MissingPermissionError
+
+    Perms.VIEW_USERS is included in NO_ACCOUNT_REQUIRED_PERMS_LIST,
+    so no cookie is required for that action.
+    """
+
+    account_required = not set(permissions_list).issubset(NO_ACCOUNT_REQUIRED_PERMS_LIST)
+
+    if not account_required:
+        return True
+
+    if user is None:
+        return False
+
+    return set(permissions_list).issubset(user.perms_list + NO_ACCOUNT_REQUIRED_PERMS_LIST)
+
+def assert_has_permissions(user, permissions_list):
+
+    is_authorized = has_permissions(user, permissions_list)
+
+    if not is_authorized:
+        raise MissingPermissionError
+
 def encode_perms(perms_list, perms_enum = Perms):
     perms_int = 0
 

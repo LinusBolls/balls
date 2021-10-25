@@ -5,7 +5,7 @@ from flask_restful import Resource, reqparse
 
 from src.globals import db, api, config
 from src.errors import handle_err, MissingPermissionError
-from src.perms import Perms
+from src.perms import Perms, assert_has_permissions
 from src.db_handlers.User import User
 from src.db_handlers.Match import Match
 
@@ -21,10 +21,8 @@ class PostMatch(Resource):
 
     def post(self):
         try:
-            creator, err = User.from_token(db, request.cookies.get("token"))
-
-            if creator is None or Perms.CREATE_MATCHES not in creator.perms_list:
-                raise MissingPermissionError
+            print(User.from_token(db, request.cookies.get("token")))
+            assert_has_permissions(User.from_token(db, request.cookies.get("token"))[0], [ Perms.CREATE_MATCHES ])
 
             match_data = self.parse()
             match_data["created"] = datetime.now()

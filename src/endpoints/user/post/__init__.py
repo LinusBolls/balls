@@ -5,7 +5,7 @@ from flask_restful import Resource, reqparse
 
 from src.globals import db, api, config
 from src.errors import handle_err
-from src.perms import Perms, encode_perms, UNCONDITIONAL_PERM_LIST
+from src.perms import Perms, encode_perms, has_permissions, ACCOUNT_REQUIRED_PERMS_LIST
 from src.db_handlers.User import User
 
 def make_cookie(payload, expiry_days, is_httponly=True):
@@ -37,7 +37,7 @@ class PostUser(Resource):
         try:            
             creator, err = User.from_token(db, request.cookies.get("token"))
 
-            is_self_created = creator is None or Perms.CREATE_USERS not in creator.perms_list
+            is_self_created = not has_permissions(creator, [ Perms.CREATE_USERS ])
 
             user_data = self.parse()
             user_data["created"] = datetime.now()
@@ -45,7 +45,7 @@ class PostUser(Resource):
             user_data["elo"] = {}
 
             if is_self_created or user_data["perms_int"] is None:
-                user_data["perms_int"] = encode_perms(UNCONDITIONAL_PERM_LIST)
+                user_data["perms_int"] = encode_perms(ACCOUNT_REQUIRED_PERMS_LIST)
 
             user = User(db, user_data)
             is_successful, err = user.create()

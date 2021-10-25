@@ -1,15 +1,12 @@
 from datetime import datetime
 import requests
-import jwt
 
 res = requests.post("http://localhost:8080/api/v1/user/", { "email": "linus.bolls@code.berlin", "name": "Linus Bolls", "img": "" })
 assert res.status_code == 201
-
 linus_cookie = res.headers["Set-Cookie"]
 
 res = requests.post("http://localhost:8080/api/v1/user/", { "email": "tom-perry.lustig@code.berlin", "name": "Perry :)", "img": "" })
 assert res.status_code == 201
-
 tom_cookie = res.headers["Set-Cookie"]
 
 res = requests.get("http://localhost:8080/api/v1/user/linus.bolls@code.berlin")
@@ -17,7 +14,6 @@ assert res.json()["data"]["name"] == "Linus Bolls"
 
 res = requests.get("http://localhost:8080/api/v1/user/nonexistent.user@code.berlin")
 assert res.status_code == 404
-
 
 res = requests.get("http://localhost:8080/api/v1/match/nonexistent_matchid")
 assert res.status_code == 404
